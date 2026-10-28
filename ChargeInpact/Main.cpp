@@ -9,6 +9,8 @@ int WINAPI WinMain(
 {
     // フルスクリーンで起動
     ChangeWindowMode(FALSE);
+    SetGraphMode(1920,1080,32);
+    SetUseDirectInputFlag(FALSE);
 
     // DxLibの初期化
     if (DxLib_Init() == -1)

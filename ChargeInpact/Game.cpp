@@ -9,10 +9,10 @@ void Game::Init()
     select = 0;
     selectedStrategy = 0;
 
-    oldEnter = 0;
-    oldUp = 0;
-    oldDown = 0;
-    oldEscape = 0;
+    oldEnter = false;
+    oldUp = false;
+    oldDown = false;
+    oldEscape = false;
 }
 
 // ゲームの更新
@@ -103,14 +103,17 @@ void Game::Draw()
 {
     ClearDrawScreen();
 
+    // 文字の大きさを設定
+    SetFontSize(36);
+
     // タイトル画面
     if (scene == 0)
     {
-        DrawString(220, 100,
+        DrawString(660, 225,
             "STRATEGY BATTLE",
             GetColor(255, 255, 255));
 
-        DrawString(220, 180,
+        DrawString(660, 405,
             "Press ENTER to start",
             GetColor(255, 255, 0));
     }
@@ -118,27 +121,27 @@ void Game::Draw()
     // 戦術選択画面
     else if (scene == 1)
     {
-        DrawString(100, 80,
+        DrawString(300, 180,
             "Select your strategy",
             GetColor(255, 255, 255));
 
-        DrawString(120, 160,
+        DrawString(360, 360,
             select == 0 ? "> Attack" : "  Attack",
             GetColor(255, 100, 100));
 
-        DrawString(120, 210,
+        DrawString(360, 472,
             select == 1 ? "> Defense" : "  Defense",
             GetColor(100, 200, 255));
 
-        DrawString(120, 260,
+        DrawString(360, 585,
             select == 2 ? "> Trick" : "  Trick",
             GetColor(255, 220, 100));
 
-        DrawString(100, 350,
+        DrawString(300, 788,
             "UP / DOWN : Select",
             GetColor(200, 200, 200));
 
-        DrawString(100, 380,
+        DrawString(300, 855,
             "ESC : Back to Title",
             GetColor(200, 200, 200));
     }
@@ -146,30 +149,30 @@ void Game::Draw()
     // 戦術の結果画面
     else if (scene == 2)
     {
-        DrawString(100, 100,
+        DrawString(300, 225,
             "Strategy Confirmed!",
             GetColor(255, 255, 255));
 
         if (selectedStrategy == 0)
         {
-            DrawString(100, 180,
+            DrawString(300, 405,
                 "ATTACK SELECTED",
                 GetColor(255, 100, 100));
         }
         else if (selectedStrategy == 1)
         {
-            DrawString(100, 180,
+            DrawString(300, 405,
                 "DEFENSE SELECTED",
                 GetColor(100, 200, 255));
         }
         else if (selectedStrategy == 2)
         {
-            DrawString(100, 180,
+            DrawString(300, 405,
                 "TRICK SELECTED",
                 GetColor(255, 220, 100));
         }
 
-        DrawString(100, 280,
+        DrawString(300, 630,
             "ENTER : Back to Select",
             GetColor(200, 200, 200));
     }

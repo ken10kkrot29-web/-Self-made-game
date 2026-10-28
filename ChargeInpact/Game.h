@@ -24,8 +24,8 @@ private:
     int selectedStrategy = 0;
 
     // 前回のキー入力状態
-    int oldEnter = 0;
-    int oldUp = 0;
-    int oldDown = 0;
-    int oldEscape = 0;
+    bool oldEnter = false;
+    bool oldUp = false;
+    bool oldDown = false;
+    bool oldEscape = false;
 };
