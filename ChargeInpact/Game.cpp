@@ -13,6 +13,11 @@ void Game::Init()
     oldUp = false;
     oldDown = false;
     oldEscape = false;
+
+    battle.Init();
+    chargeInpact.Init();
+
+    resultSent = false;
 }
 
 // ゲームの更新
@@ -76,16 +81,53 @@ bool Game::Update()
         if (enter == 1 && oldEnter == 0)
         {
             selectedStrategy = select;
+
+            // 選択した戦略を保存
+            battle.SetPlayerStrategy((StrategyType)selectedStrategy);
+
+            // 敵の行動を決定
+            battle.StartTurn();
+
+            // CIゲージを初期化
+            chargeInpact.Init();
+
+            resultSent = false;
+
             scene = 2;
         }
     }
 
     // 戦術の結果画面
+    // CI画面
     else if (scene == 2)
+    {
+        chargeInpact.Update();
+
+        // CIが停止したら結果を戦闘システムに渡す
+        if (chargeInpact.IsStopped() && !resultSent)
+        {
+            bool playerWin = chargeInpact.GetScore() >= 50;
+
+            battle.SetChargeImpactResult(playerWin);
+            battle.ResolveBattle();
+
+            resultSent = true;
+            scene = 3;
+        }
+    }
+
+    // 戦闘結果画面
+    else if (scene == 3)
     {
         if (enter == 1 && oldEnter == 0)
         {
             scene = 1;
+
+            select = 0;
+            resultSent = false;
+
+            battle.Init();
+            chargeInpact.Init();
         }
     }
 
@@ -147,33 +189,57 @@ void Game::Draw()
     }
 
     // 戦術の結果画面
+// CI画面
     else if (scene == 2)
     {
-        DrawString(300, 225,
-            "Strategy Confirmed!",
+        DrawString(300, 100, "CHARGE IMPACT",
             GetColor(255, 255, 255));
 
-        if (selectedStrategy == 0)
+        chargeInpact.Draw();
+
+        DrawString(100, 400, "SPACE : STOP",
+            GetColor(255, 255, 0));
+
+        DrawFormatString(100, 500,
+            GetColor(255, 255, 255),
+            "Player HP : %d", battle.GetPlayer().GetHP());
+
+        DrawFormatString(100, 550,
+            GetColor(255, 255, 255),
+            "Enemy HP : %d", battle.GetEnemy().GetHP());
+    }
+
+    // 戦闘結果画面
+    else if (scene == 3)
+    {
+        DrawString(300, 200, "BATTLE RESULT",
+            GetColor(255, 255, 255));
+
+        DrawFormatString(300, 350,
+            GetColor(255, 255, 255),
+            "Player HP : %d", battle.GetPlayer().GetHP());
+
+        DrawFormatString(300, 420,
+            GetColor(255, 255, 255),
+            "Enemy HP : %d", battle.GetEnemy().GetHP());
+
+        if (battle.GetEnemy().IsDefeated())
         {
-            DrawString(300, 405,
-                "ATTACK SELECTED",
+            DrawString(300, 550, "YOU WIN!",
+                GetColor(255, 255, 0));
+        }
+        else if (battle.GetPlayer().IsDefeated())
+        {
+            DrawString(300, 550, "YOU LOSE!",
                 GetColor(255, 100, 100));
         }
-        else if (selectedStrategy == 1)
+        else
         {
-            DrawString(300, 405,
-                "DEFENSE SELECTED",
-                GetColor(100, 200, 255));
-        }
-        else if (selectedStrategy == 2)
-        {
-            DrawString(300, 405,
-                "TRICK SELECTED",
-                GetColor(255, 220, 100));
+            DrawString(300, 550, "TURN END",
+                GetColor(255, 255, 255));
         }
 
-        DrawString(300, 630,
-            "ENTER : Back to Select",
+        DrawString(300, 700, "ENTER : Continue",
             GetColor(200, 200, 200));
     }
 }
