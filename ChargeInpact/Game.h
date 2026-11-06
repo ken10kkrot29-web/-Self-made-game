@@ -1,7 +1,8 @@
-//Game.h：ゲーム全体を管理するクラスの宣言
+﻿// Game.h：ゲーム全体を管理するクラスの宣言
 #pragma once
 #include "BattleSystem.h"
 #include "ChargeInpact.h"
+#include "Tournament.h"
 
 class Game
 {
@@ -16,13 +17,15 @@ public:
     void Draw();
 
 private:
-    // 画面の状態
+    // 現在の画面
     int scene = 0;
 
-    // 選択中の戦術
+    Tournament tournament;
+
+    // 選択中の戦略
     int select = 0;
 
-    // 確定した戦術
+    // 決定した戦略
     int selectedStrategy = 0;
 
     // 戦闘システム
@@ -31,7 +34,7 @@ private:
     // チャージインパクト
     ChargeInpact chargeInpact;
 
-    // CIの結果を戦闘処理に渡したか
+    // CIの結果を戦闘システムに渡したか
     bool resultSent;
 
     // 前回のキー入力状態

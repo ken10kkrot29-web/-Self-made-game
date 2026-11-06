@@ -60,7 +60,6 @@ void BattleSystem::StartTurn()
     enemyAction = enemy.SelectAction(playerStrategy);
 }
 
-//勝敗処理
 // 勝敗処理
 void BattleSystem::ResolveBattle()
 {

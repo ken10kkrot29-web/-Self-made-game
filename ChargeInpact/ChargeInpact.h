@@ -27,6 +27,24 @@ private:
 	// 残り時間（秒）
 	float remainingTime;
 
+	// CPUのゲージ位置
+	float cpuBarX;
+
+	// CPUの移動方向
+	int cpuDirection;
+
+	// CPUの移動速度
+	float cpuSpeed;
+
+	// CPUの停止状態
+	bool cpuIsStopped;
+
+	// CPUのスコア
+	int cpuScore;
+
+	// CPUが停止する目標位置
+	int cpuTargetScore;
+
 //public：クラスの外からでも呼び出せる関数を書く。
 public:
 	// ゲージを初期化する
@@ -43,5 +61,20 @@ public:
 
 	// スコアを取得する
 	int GetScore();
+
+	//CIスピードの設定
+	void SetSpeed(float newSpeed);
+
+	// CPU用のゲージ更新
+	void UpdateCPU();
+
+	// CPU用のゲージ描画
+	void DrawCPU();
+
+	// CPUのスコアを取得
+	int GetCPUScore();
+
+	// CPUのゲージが停止しているか取得する
+	bool IsCPUStopped();
 
 };

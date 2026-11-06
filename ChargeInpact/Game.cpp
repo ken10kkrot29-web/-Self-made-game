@@ -1,4 +1,4 @@
-//画面表示、キー入力、画面切り替え
+﻿// 画面表示、キー入力、画面切り替え
 #include "DxLib.h"
 #include "Game.h"
 
@@ -16,6 +16,7 @@ void Game::Init()
 
     battle.Init();
     chargeInpact.Init();
+    tournament.Init();
 
     resultSent = false;
 }
@@ -34,7 +35,7 @@ bool Game::Update()
     {
         if (scene == 0)
         {
-            //ゲーム終了で使われる
+            // ゲーム終了
             return false;
         }
         else
@@ -52,7 +53,7 @@ bool Game::Update()
         }
     }
 
-    // 戦術選択画面
+    // 戦略選択画面
     else if (scene == 1)
     {
         // 上キー
@@ -77,7 +78,7 @@ bool Game::Update()
             }
         }
 
-        // ENTERキーで戦術を確定
+        // ENTERキーで戦略を決定
         if (enter == 1 && oldEnter == 0)
         {
             selectedStrategy = select;
@@ -91,22 +92,45 @@ bool Game::Update()
             // CIゲージを初期化
             chargeInpact.Init();
 
+            // 試合数に応じてCI速度を変更
+            int battleNumber = tournament.GetBattleCount();
+
+            if (battleNumber == 0)
+            {
+                chargeInpact.SetSpeed(4.5f);
+            }
+            else if (battleNumber == 1)
+            {
+                chargeInpact.SetSpeed(6.0f);
+            }
+            else if (battleNumber == 2)
+            {
+                chargeInpact.SetSpeed(7.5f);
+            }
+
             resultSent = false;
 
             scene = 2;
         }
     }
 
-    // 戦術の結果画面
     // CI画面
     else if (scene == 2)
     {
+        // プレイヤーのゲージ更新
         chargeInpact.Update();
 
-        // CIが停止したら結果を戦闘システムに渡す
-        if (chargeInpact.IsStopped() && !resultSent)
+        // CPUのゲージ更新
+        chargeInpact.UpdateCPU();
+
+        // 両方のゲージが停止したら結果判定
+        if (chargeInpact.IsStopped() &&
+            chargeInpact.IsCPUStopped() &&
+            !resultSent)
         {
-            bool playerWin = chargeInpact.GetScore() >= 50;
+            // プレイヤーとCPUのスコアを比較
+            bool playerWin =
+                chargeInpact.GetScore() >= chargeInpact.GetCPUScore();
 
             battle.SetChargeImpactResult(playerWin);
             battle.ResolveBattle();
@@ -121,17 +145,56 @@ bool Game::Update()
     {
         if (enter == 1 && oldEnter == 0)
         {
-            scene = 1;
+            // 戦闘が終了している場合
+            if (battle.IsBattleEnd())
+            {
+                // 敵を倒していたらプレイヤーの勝利
+                bool playerWin = battle.GetEnemy().IsDefeated();
+
+                // トーナメントに結果を送る
+                tournament.SetBattleResult(playerWin);
+
+                // トーナメントが終了した場合
+                if (tournament.IsFinished())
+                {
+                    scene = 4;
+                }
+                else
+                {
+                    // 次の試合を開始
+                    battle.Init();
+                    chargeInpact.Init();
+
+                    scene = 1;
+                }
+            }
+            else
+            {
+                // まだ戦闘が続いている場合
+                scene = 1;
+                chargeInpact.Init();
+            }
 
             select = 0;
             resultSent = false;
-
-            battle.Init();
-            chargeInpact.Init();
         }
     }
 
-    // 今回のキー状態を保存
+    // トーナメント結果画面
+    else if (scene == 4)
+    {
+        if (enter == 1 && oldEnter == 0)
+        {
+            tournament.Init();
+            battle.Init();
+            chargeInpact.Init();
+
+            scene = 0;
+            select = 0;
+        }
+    }
+
+    // 前回のキー状態を保存
     oldEnter = enter;
     oldUp = up;
     oldDown = down;
@@ -152,94 +215,176 @@ void Game::Draw()
     if (scene == 0)
     {
         DrawString(660, 225,
-            "STRATEGY BATTLE",
+            L"STRATEGY バトル",
             GetColor(255, 255, 255));
 
         DrawString(660, 405,
-            "Press ENTER to start",
+            L" ENTER to start",
             GetColor(255, 255, 0));
     }
 
-    // 戦術選択画面
+    // 戦略選択画面
     else if (scene == 1)
     {
         DrawString(300, 180,
-            "Select your strategy",
+            L"戦略を選択してください",
             GetColor(255, 255, 255));
 
+        // 現在の試合数を表示
+        DrawFormatString(300, 250,
+            GetColor(255, 255, 0),
+            L"バトル : %d / 3",
+            tournament.GetBattleCount() + 1);
+
+        DrawFormatString(300, 290,
+            GetColor(255, 255, 255),
+            L"勝利数 : %d",
+            tournament.GetWinCount());
+
         DrawString(360, 360,
-            select == 0 ? "> Attack" : "  Attack",
+            select == 0 ? L"> 攻撃" : L"  攻撃",
             GetColor(255, 100, 100));
 
         DrawString(360, 472,
-            select == 1 ? "> Defense" : "  Defense",
+            select == 1 ? L"> 防御" : L"  防御",
             GetColor(100, 200, 255));
 
         DrawString(360, 585,
-            select == 2 ? "> Trick" : "  Trick",
+            select == 2 ? L"> 奇策" : L"  奇策",
             GetColor(255, 220, 100));
 
         DrawString(300, 788,
-            "UP / DOWN : Select",
+            L"上 / 下（矢印キー） : 選択",
             GetColor(200, 200, 200));
 
         DrawString(300, 855,
-            "ESC : Back to Title",
+            L"ESC : ゲーム終了",
             GetColor(200, 200, 200));
     }
 
-    // 戦術の結果画面
-// CI画面
+    // CI画面
     else if (scene == 2)
     {
-        DrawString(300, 100, "CHARGE IMPACT",
+        DrawString(300, 100,
+            L"CHARGE IMPACT",
             GetColor(255, 255, 255));
 
+        // プレイヤー側のゲージ
         chargeInpact.Draw();
 
-        DrawString(100, 400, "SPACE : STOP",
+        // CPU側のゲージ
+        chargeInpact.DrawCPU();
+
+        DrawString(100, 400,
+            L"SPACE : ゲージを止める",
             GetColor(255, 255, 0));
 
         DrawFormatString(100, 500,
             GetColor(255, 255, 255),
-            "Player HP : %d", battle.GetPlayer().GetHP());
+            L"Player HP : %d",
+            battle.GetPlayer().GetHP());
 
         DrawFormatString(100, 550,
             GetColor(255, 255, 255),
-            "Enemy HP : %d", battle.GetEnemy().GetHP());
+            L"Enemy HP : %d",
+            battle.GetEnemy().GetHP());
     }
 
     // 戦闘結果画面
     else if (scene == 3)
     {
-        DrawString(300, 200, "BATTLE RESULT",
+        DrawString(300, 200,
+            L"バトル結果",
             GetColor(255, 255, 255));
+
+        DrawFormatString(300, 270,
+            GetColor(255, 255, 0),
+            L"バトル : %d / 3",
+            tournament.GetBattleCount() + 1);
 
         DrawFormatString(300, 350,
             GetColor(255, 255, 255),
-            "Player HP : %d", battle.GetPlayer().GetHP());
+            L"Player HP : %d",
+            battle.GetPlayer().GetHP());
 
-        DrawFormatString(300, 420,
+        // プレイヤーのCIスコアを表示
+        DrawFormatString(300, 480,
             GetColor(255, 255, 255),
-            "Enemy HP : %d", battle.GetEnemy().GetHP());
+            L"Player CI Score : %d",
+            chargeInpact.GetScore());
 
+        // 敵のHPを表示
+        DrawFormatString(300, 400,
+            GetColor(255, 255, 255),
+            L"Enemy HP : %d",
+            battle.GetEnemy().GetHP());
+
+        // CIの勝敗を表示
+        if (chargeInpact.GetScore() >= 50)
+        {
+            DrawString(300, 530,
+                L"CI WIN!",
+                GetColor(255, 255, 0));
+        }
+        else
+        {
+            DrawString(300, 530,
+                L"CI LOSE...",
+                GetColor(255, 100, 100));
+        }
+
+        // バトルの勝敗を表示
         if (battle.GetEnemy().IsDefeated())
         {
-            DrawString(300, 550, "YOU WIN!",
+            DrawString(300, 610,
+                L"Playerの勝ち!",
                 GetColor(255, 255, 0));
         }
         else if (battle.GetPlayer().IsDefeated())
         {
-            DrawString(300, 550, "YOU LOSE!",
+            DrawString(300, 610,
+                L"Enemyの勝ち!",
                 GetColor(255, 100, 100));
         }
         else
         {
-            DrawString(300, 550, "TURN END",
+            DrawString(300, 610,
+                L"次の攻撃戦略へ",
                 GetColor(255, 255, 255));
         }
 
-        DrawString(300, 700, "ENTER : Continue",
+        DrawString(300, 700,
+            L"ENTER : 続ける",
+            GetColor(200, 200, 200));
+    }
+
+    // トーナメント結果画面
+    else if (scene == 4)
+    {
+        DrawString(300, 200,
+            L"トーナメント結果",
+            GetColor(255, 255, 255));
+
+        DrawFormatString(300, 350,
+            GetColor(255, 255, 255),
+            L"勝利数 : %d",
+            tournament.GetWinCount());
+
+        if (tournament.IsWinner())
+        {
+            DrawString(300, 500,
+                L"トーナメントクリア！",
+                GetColor(255, 255, 0));
+        }
+        else
+        {
+            DrawString(300, 500,
+                L"残念！",
+                GetColor(255, 100, 100));
+        }
+
+        DrawString(300, 700,
+            L"ENTER : タイトルに戻る",
             GetColor(200, 200, 200));
     }
 }

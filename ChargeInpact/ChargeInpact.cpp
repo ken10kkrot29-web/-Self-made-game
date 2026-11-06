@@ -7,6 +7,10 @@ const int BAR_LEFT = 100;
 const int BAR_RIGHT = 540;
 const int BAR_Y = 240;
 const int BAR_WIDTH = BAR_RIGHT - BAR_LEFT;
+// CPUゲージの左端・右端
+const int CPU_BAR_LEFT = 1250;
+const int CPU_BAR_RIGHT = 1690;
+const int CPU_BAR_WIDTH = CPU_BAR_RIGHT - CPU_BAR_LEFT;
 
 //ゲージの初期化内容をここに記載
 void ChargeInpact::Init()
@@ -21,6 +25,17 @@ void ChargeInpact::Init()
     //残り時間
     remainingTime = 10.0f;
     score = 0;
+
+    // CPU側の初期化
+// CPUは右端からスタート
+    cpuBarX = (float)CPU_BAR_RIGHT;
+    cpuDirection = -1;
+    cpuSpeed = speed;
+    cpuIsStopped = false;
+    cpuScore = 0;
+
+    // CPUの停止目標を設定
+    cpuTargetScore = GetRand(100);
 }
 
 void ChargeInpact::Update()
@@ -102,12 +117,12 @@ void ChargeInpact::Draw()
 
     // スコア表示
     DrawFormatString(100, 290, GetColor(255, 255, 255),
-        "Score:%d", score);
+        L"Score:%d", score);
 
     // 残り時間の状態
     if (isStopped)
     {
-        DrawString(100, 320, "STOP!", GetColor(255, 255, 255));
+        DrawString(100, 320, L"STOP!", GetColor(255, 255, 255));
     }
 
 }
@@ -120,4 +135,96 @@ bool ChargeInpact::IsStopped()
 int ChargeInpact::GetScore()
 {
     return score;
+}
+
+// CIゲージの速度を設定する（他クラス可）
+void ChargeInpact::SetSpeed(float newSpeed)
+{
+    speed = newSpeed;
+    cpuSpeed = newSpeed;
+}
+
+// CPU用のゲージ更新
+void ChargeInpact::UpdateCPU()
+{
+    if (cpuIsStopped)
+    {
+        return;
+    }
+
+    // CPUのゲージを移動
+    cpuBarX += cpuSpeed * cpuDirection;
+
+    // 左端に到達したら右向き
+    if (cpuBarX <= CPU_BAR_LEFT)
+    {
+        cpuBarX = (float)CPU_BAR_LEFT;
+        cpuDirection = 1;
+    }
+
+    // 右端に到達したら左向き
+    if (cpuBarX >= CPU_BAR_RIGHT)
+    {
+        cpuBarX = (float)CPU_BAR_RIGHT;
+        cpuDirection = -1;
+    }
+
+    // 右から左に進むほどスコアが上がる
+    int currentScore =
+        (int)((CPU_BAR_RIGHT - cpuBarX) * 100.0f / CPU_BAR_WIDTH);
+
+    // 目標スコアに到達したら停止
+    if (currentScore >= cpuTargetScore)
+    {
+        cpuIsStopped = true;
+        cpuScore = currentScore;
+    }
+}
+
+// CPU用のゲージ描画
+void ChargeInpact::DrawCPU()
+{
+    // プレイヤーと同じ高さにする
+    int cpuY = BAR_Y;
+
+    // ゲージ背景
+    DrawBox(CPU_BAR_LEFT, cpuY - 10,
+        CPU_BAR_RIGHT, cpuY + 10,
+        GetColor(80, 80, 80), TRUE);
+
+    // スコア50の位置
+    DrawLine((CPU_BAR_LEFT + CPU_BAR_RIGHT) / 2,
+        cpuY - 25,
+        (CPU_BAR_LEFT + CPU_BAR_RIGHT) / 2,
+        cpuY + 25,
+        GetColor(0, 255, 0));
+
+    // 現在の位置
+    DrawBox((int)cpuBarX - 3, cpuY - 18,
+        (int)cpuBarX + 3, cpuY + 18,
+        GetColor(50, 150, 255), TRUE);
+
+    // CPUスコア
+    DrawFormatString(CPU_BAR_LEFT, 290,
+        GetColor(255, 255, 255),
+        L"ENEMY Score:%d", cpuScore);
+
+    if (cpuIsStopped)
+    {
+        DrawString(CPU_BAR_LEFT, 320,
+            L"ENEMY STOP!",
+            GetColor(255, 255, 255));
+    }
+}
+
+// CPUスコアを取得
+int ChargeInpact::GetCPUScore()
+{
+    return cpuScore;
+}
+
+// CPUの停止状態を取得
+bool ChargeInpact::IsCPUStopped()
+{
+    return cpuIsStopped;
 }
