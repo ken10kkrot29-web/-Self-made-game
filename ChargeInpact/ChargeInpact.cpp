@@ -18,7 +18,10 @@ void ChargeInpact::Init()
     barX = (float)BAR_LEFT;
     direction = 1;
     speed = 3.0f;
+    baseSpeed = speed;
+    tieCount = 0;
     isStopped = false;
+    oldSpace = false;
     //GetNowCount() = 動後の経過時間をミリ秒単位表す関数
     //GetNowCount() = DxLibに最初から用意されている関数
     startTime = GetNowCount();
@@ -40,11 +43,21 @@ void ChargeInpact::Init()
 
 void ChargeInpact::Update()
 {
-    //停止ボタンを押していたらそれ以上の処理をしない
+    // スペースキーの状態を取得
+    int space = CheckHitKey(KEY_INPUT_SPACE);
+
+    // 押した瞬間だけ判定
+    bool spacePressed = (space == 1 && oldSpace == false);
+
+    // 前回のキー状態を保存
+    oldSpace = space;
+
+    // 停止済みなら処理を終了
     if (isStopped)
     {
         return;
     }
+
     // 制限時間は10秒
     if (GetNowCount() - startTime >= 10000)
     {
@@ -54,8 +67,8 @@ void ChargeInpact::Update()
         return;
     }
 
-    // スペースキーが押されたら停止
-    if (CheckHitKey(KEY_INPUT_SPACE))
+    // スペースキーを押した瞬間だけ停止
+    if (spacePressed)
     {
         isStopped = true;
 
@@ -137,11 +150,14 @@ int ChargeInpact::GetScore()
     return score;
 }
 
-// CIゲージの速度を設定する（他クラス可）
+// CIゲージの速度を設定する
 void ChargeInpact::SetSpeed(float newSpeed)
 {
     speed = newSpeed;
     cpuSpeed = newSpeed;
+
+    // 試合開始時の基本速度を保存
+    baseSpeed = newSpeed;
 }
 
 // CPU用のゲージ更新
@@ -227,4 +243,44 @@ int ChargeInpact::GetCPUScore()
 bool ChargeInpact::IsCPUStopped()
 {
     return cpuIsStopped;
+}
+
+// CPUの停止スコア範囲を設定
+void ChargeInpact::SetCPUTargetRange(int minScore, int maxScore)
+{
+    cpuMinScore = minScore;
+    cpuMaxScore = maxScore;
+
+    cpuTargetScore = GetRand(cpuMaxScore - cpuMinScore) + cpuMinScore;
+}
+
+// あいこ後の再挑戦処理
+void ChargeInpact::RetryAfterTie()
+{
+    // あいこの回数を増やす
+    tieCount++;
+
+    // 速度を1.0ずつ上げる
+    speed = baseSpeed + tieCount * 1.5f;
+    cpuSpeed = speed;
+
+    // プレイヤーゲージを初期位置に戻す
+    barX = (float)BAR_LEFT;
+    direction = 1;
+    isStopped = false;
+    score = 0;
+    oldSpace = CheckHitKey(KEY_INPUT_SPACE);
+
+    // CPUゲージを初期位置に戻す
+    cpuBarX = (float)CPU_BAR_RIGHT;
+    cpuDirection = -1;
+    cpuIsStopped = false;
+    cpuScore = 0;
+
+    // 試合ごとの難易度を維持してCPUの停止目標を再設定
+    cpuTargetScore = GetRand(cpuMaxScore - cpuMinScore) + cpuMinScore;
+
+    // 制限時間をリセット
+    startTime = GetNowCount();
+    remainingTime = 10.0f;
 }

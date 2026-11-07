@@ -42,4 +42,13 @@ private:
     bool oldUp = false;
     bool oldDown = false;
     bool oldEscape = false;
+
+    // あいこが発生したか
+    bool isTie;
+
+    // あいこ後の再挑戦を待っているか
+    bool isTieWaiting;
+
+    // あいこになった時刻
+    int tieWaitStartTime;
 };

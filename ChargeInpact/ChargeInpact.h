@@ -45,6 +45,18 @@ private:
 	// CPUが停止する目標位置
 	int cpuTargetScore;
 
+	// あいこになった回数
+	int tieCount;
+
+	// 試合開始時の基本速度
+	float baseSpeed;
+
+	// 前回のスペースキーの状態
+	bool oldSpace;
+
+	int cpuMinScore;
+	int cpuMaxScore;
+
 //public：クラスの外からでも呼び出せる関数を書く。
 public:
 	// ゲージを初期化する
@@ -65,6 +77,9 @@ public:
 	//CIスピードの設定
 	void SetSpeed(float newSpeed);
 
+	// あいこ後にゲージを再挑戦できる状態にする
+	void RetryAfterTie();
+
 	// CPU用のゲージ更新
 	void UpdateCPU();
 
@@ -76,5 +91,8 @@ public:
 
 	// CPUのゲージが停止しているか取得する
 	bool IsCPUStopped();
+
+	// CPUの停止スコア範囲を設定
+	void SetCPUTargetRange(int minScore, int maxScore);
 
 };
