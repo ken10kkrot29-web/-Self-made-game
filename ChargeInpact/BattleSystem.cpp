@@ -10,8 +10,8 @@ void BattleSystem::Init(int battleNumber)
     playerWinCI = false;
     enemyAction = EnemyAbility::None;
 
-    damage = 20;
-    healAmount = 5;
+    damage = 15;
+    healAmount = 10;
 
     isBattleEnd = false;
 
@@ -22,6 +22,11 @@ void BattleSystem::Init(int battleNumber)
     disableAction = EnemyAbility::None;
     disableTurns = 0;
     sealUseCount = 0;
+    // 戦闘履歴を初期化
+    for (int i = 0; i < 3; i++)
+    {
+        battleLog[i] = L"";
+    }
 }
 
 void BattleSystem::SetPlayerStrategy(StrategyType strategy)
@@ -68,6 +73,12 @@ void BattleSystem::StartTurn()
     // 敵の行動を選択
     enemyAction = enemy.SelectAction(playerStrategy);
 
+    // 敵がCI速度妨害を使用した場合
+    if (enemyAction == EnemyAbility::CISpeedInterference)
+    {
+        AddBattleLog(L"敵がチャージインパクトを妨害！");
+    }
+
     // 6種類の能力の封印ターンを減らす
     for (int i = 0; i < 6; i++)
     {
@@ -80,20 +91,28 @@ void BattleSystem::StartTurn()
 // 勝敗処理
 void BattleSystem::ResolveBattle()
 {
-    damage = 20;
-    healAmount = 5;
-
     // 敵が防御しているか
     bool enemyDefending =
         (enemyAction == EnemyAbility::Defense);
 
-    // 敵の攻撃力
-    int enemyDamage = enemy.GetAttackPower();
+    // プレイヤーの攻撃ダメージを計算
+    int playerDamage =
+        player.GetAttackPower() - enemy.GetDefensePower();
 
-    // 攻撃強化が有効なら攻撃力を5増やす
-    if (enemyAttackBoost)
+    // 最低ダメージを5にする
+    if (playerDamage < 5)
     {
-        enemyDamage += 10;
+        playerDamage = 5;
+    }
+
+    // 敵の攻撃ダメージを計算
+    int enemyDamage =
+        enemy.GetAttackPower() - player.GetDefensePower();
+
+    // 最低ダメージを5にする
+    if (enemyDamage < 5)
+    {
+        enemyDamage = 5;
     }
 
     // プレイヤーがCIに勝った場合
@@ -103,38 +122,23 @@ void BattleSystem::ResolveBattle()
         {
         case StrategyType::Attack:
 
-            int playerDamage;
+            // CI勝利で攻撃力を2倍にする
+            playerDamage *= 2;
 
-            // 敵が防御していた場合
+            // 敵が防御していた場合はダメージを半減
             if (enemyDefending)
             {
-                playerDamage = damage;
-            }
-            else
-            {
-                playerDamage = damage * 2;
-            }
-
-            // 敵が防御強化していた場合
-            if (enemyDefenseBoost)
-            {
-                playerDamage -= 5;
-
-                if (playerDamage < 0)
-                {
-                    playerDamage = 0;
-                }
-
-                enemyDefenseBoost = false;
+                playerDamage /= 2;
+                AddBattleLog(L"敵は攻撃を防御した！");
             }
 
             enemy.TakeDamage(playerDamage);
 
-            // 防御強化によるダメージ軽減
-            if (enemyDefenseBoost && !enemy.IsDefeated())
-            {
-                // 今回は敵の防御強化を次の攻撃まで保持
-            }
+            AddBattleLog(
+                std::wstring(L"プレイヤーが攻撃！敵に")
+                + std::to_wstring(playerDamage)
+                + L"ダメージ！"
+            );
 
             break;
 
@@ -147,22 +151,21 @@ void BattleSystem::ResolveBattle()
             if (trickChoice == 0)
             {
                 player.Heal(15);
+                AddBattleLog(L"プレイヤーが回復した！");
             }
 
             // 能力封印を選択した場合
             else if (trickChoice == 1)
             {
-                // 封印回数が2回未満の場合
                 if (sealUseCount < 2)
                 {
-                    // 敵が持っていて、封印されていない能力か確認
                     if (enemy.HasAbility(disableAction) &&
                         !enemy.IsAbilitySealed(disableAction))
                     {
                         enemy.SealAbility(disableAction);
-
-                        // 封印使用回数を増やす
                         sealUseCount++;
+
+                        AddBattleLog(L"敵の能力を封印した！");
                     }
                 }
             }
@@ -177,24 +180,25 @@ void BattleSystem::ResolveBattle()
             {
             case EnemyAbility::Attack:
 
+                // プレイヤーが防御していた場合
                 if (playerStrategy == StrategyType::Defense)
                 {
                     enemyDamage /= 2;
                 }
 
                 player.TakeDamage(enemyDamage);
+
+                AddBattleLog(
+                    std::wstring(L"敵が攻撃！プレイヤーに")
+                    + std::to_wstring(enemyDamage)
+                    + L"ダメージ！"
+                );
+
                 break;
 
             case EnemyAbility::Recovery:
                 enemy.Heal(15);
-                break;
-
-            case EnemyAbility::AttackBoost:
-                enemyAttackBoost = true;
-                break;
-
-            case EnemyAbility::DefenseBoost:
-                enemyDefenseBoost = true;
+                AddBattleLog(L"敵が回復した！");
                 break;
 
             default:
@@ -217,22 +221,18 @@ void BattleSystem::ResolveBattle()
             }
 
             player.TakeDamage(enemyDamage);
-            
-            // 攻撃強化を解除
-            enemyAttackBoost = false;
+
+            AddBattleLog(
+                std::wstring(L"敵が攻撃！プレイヤーに")
+                + std::to_wstring(enemyDamage)
+                + L"ダメージ！"
+            );
 
             break;
 
         case EnemyAbility::Recovery:
             enemy.Heal(15);
-            break;
-
-        case EnemyAbility::AttackBoost:
-            enemyAttackBoost = true;
-            break;
-
-        case EnemyAbility::DefenseBoost:
-            enemyDefenseBoost = true;
+            AddBattleLog(L"敵が回復した！");
             break;
 
         default:
@@ -246,32 +246,20 @@ void BattleSystem::ResolveBattle()
             {
             case StrategyType::Attack:
 
-                int playerDamage;
-
                 // 敵が防御していた場合
                 if (enemyDefending)
                 {
-                    playerDamage = damage / 2;
-                }
-                else
-                {
-                    playerDamage = damage;
-                }
-
-                // 敵が防御強化していた場合
-                if (enemyDefenseBoost)
-                {
-                    playerDamage -= 5;
-
-                    if (playerDamage < 0)
-                    {
-                        playerDamage = 0;
-                    }
-
-                    enemyDefenseBoost = false;
+                    playerDamage /= 2;
+                    AddBattleLog(L"敵は攻撃を防御した！");
                 }
 
                 enemy.TakeDamage(playerDamage);
+
+                AddBattleLog(
+                    std::wstring(L"プレイヤーが攻撃！敵に")
+                    + std::to_wstring(playerDamage)
+                    + L"ダメージ！"
+                );
 
                 break;
 
@@ -313,4 +301,38 @@ void BattleSystem::SetDisableAction(EnemyAbility action)
 int BattleSystem::GetSealUseCount()
 {
     return sealUseCount;
+}
+
+// 戦闘履歴を追加する
+void BattleSystem::AddBattleLog(const std::wstring& message)
+{
+    // 古い履歴を1つずつずらす
+    battleLog[0] = battleLog[1];
+    battleLog[1] = battleLog[2];
+
+    // 最新の履歴を保存
+    battleLog[2] = message;
+}
+
+// 戦闘履歴を取得
+const wchar_t* BattleSystem::GetBattleLog(int index)
+{
+    if (index < 0 || index >= 3)
+    {
+        return L"";
+    }
+
+    return battleLog[index].c_str();
+}
+
+// 敵の攻撃強化状態を取得
+bool BattleSystem::IsEnemyAttackBoostActive()
+{
+    return enemyAttackBoost;
+}
+
+// 敵の防御強化状態を取得
+bool BattleSystem::IsEnemyDefenseBoostActive()
+{
+    return enemyDefenseBoost;
 }

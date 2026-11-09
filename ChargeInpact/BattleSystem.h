@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <string>
 #include "Player.h"
 #include "Enemy.h"
 #include "Strategy.h"
@@ -35,6 +36,11 @@ private:
     int sealUseCount;
 
     bool isBattleEnd;
+    // 戦闘履歴（直近3件）
+    std::wstring battleLog[3];
+
+    // 戦闘履歴を追加する
+    void AddBattleLog(const std::wstring& message);
 
 public:
     void Init(int battleNumber = 0);
@@ -65,6 +71,12 @@ public:
 
     // この試合で封印を使用した回数を取得
     int GetSealUseCount();
+    // 戦闘履歴を取得
+    const wchar_t* GetBattleLog(int index);
+
+    // 敵の強化状態を取得
+    bool IsEnemyAttackBoostActive();
+    bool IsEnemyDefenseBoostActive();
 
     bool IsBattleEnd();
 };

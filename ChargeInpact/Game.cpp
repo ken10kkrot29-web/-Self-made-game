@@ -521,6 +521,109 @@ void Game::Draw()
         DrawString(300, 855,
             L"ESC : ゲーム終了",
             GetColor(200, 200, 200));
+        // --------------------------------
+// 敵の現在の状態
+// --------------------------------
+
+        SetFontSize(28);
+
+        Enemy& enemy = battle.GetEnemy();
+
+        // 敵のHP
+        DrawString(950, 180,
+            L"【敵の状態】",
+            GetColor(255, 100, 100));
+
+        DrawFormatString(950, 235,
+            GetColor(255, 255, 255),
+            L"現在HP : %d",
+            enemy.GetHP());
+
+        // 強化状態
+        DrawString(950, 290,
+            L"【強化状態】",
+            GetColor(255, 220, 100));
+
+        DrawString(950, 335,
+            battle.IsEnemyAttackBoostActive()
+            ? L"攻撃力 : 強化中"
+            : L"攻撃力 : 通常",
+            GetColor(255, 255, 255));
+
+        DrawString(950, 375,
+            battle.IsEnemyDefenseBoostActive()
+            ? L"防御力 : 強化中"
+            : L"防御力 : 通常",
+            GetColor(255, 255, 255));
+
+
+        // --------------------------------
+        // 敵の能力状態
+        // --------------------------------
+
+        DrawString(950, 440,
+            L"【敵の所持能力】",
+            GetColor(255, 220, 100));
+
+        for (int i = 0; i < 6; i++)
+        {
+            EnemyAbility ability = static_cast<EnemyAbility>(i);
+
+            // 敵が持っている能力だけ表示
+            if (enemy.HasAbility(ability))
+            {
+                int y = 490 + i * 40;
+
+                DrawString(950, y,
+                    GetAbilityName(ability),
+                    GetColor(255, 255, 255));
+
+                // 封印状態を確認
+                if (enemy.IsAbilitySealed(ability))
+                {
+                    DrawFormatString(1200, y,
+                        GetColor(255, 100, 100),
+                        L"封印中（残り%dターン）",
+                        enemy.GetSealTurns(ability));
+                }
+                else
+                {
+                    DrawString(1200, y,
+                        L"使用可能",
+                        GetColor(100, 255, 100));
+                }
+            }
+        }
+
+
+        // --------------------------------
+        // 戦闘履歴
+        // --------------------------------
+
+        DrawString(950, 760,
+            L"【直近の戦闘履歴】",
+            GetColor(100, 200, 255));
+
+        for (int i = 0; i < 3; i++)
+        {
+            const wchar_t* log = battle.GetBattleLog(i);
+
+            if (log[0] != L'\0')
+            {
+                DrawString(950, 810 + i * 45,
+                    log,
+                    GetColor(220, 220, 220));
+            }
+            else if (i == 2)
+            {
+                DrawString(950, 810,
+                    L"まだ戦闘履歴はありません",
+                    GetColor(150, 150, 150));
+            }
+        }
+
+        // 文字サイズを元に戻す
+        SetFontSize(36);
     }
 
     // CI画面

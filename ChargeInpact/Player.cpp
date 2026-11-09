@@ -2,5 +2,5 @@
 
 void Player::Init()
 {
-    Character::Init(100);
+	Character::Init(100, 15, 5);
 }

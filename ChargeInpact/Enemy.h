@@ -23,11 +23,13 @@ private:
     // 能力の封印残りターン
     int sealTurns[6];
 
+    // 現在の試合番号
+    int battleNumber;
+
 public:
     void Init(int battleNumber);
 
     EnemyAbility SelectAction(StrategyType playerStrategy);
-    int GetAttackPower();
 
     // 能力を持っているか確認
     bool HasAbility(EnemyAbility ability);
