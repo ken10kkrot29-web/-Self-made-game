@@ -14,21 +14,30 @@ private:
     int damage;
     int healAmount;
 
-    int enemyAction;
+    EnemyAbility enemyAction;
+
+    // 敵の攻撃強化状態
+    bool enemyAttackBoost;
+
+    // 敵の防御強化状態
+    bool enemyDefenseBoost;
 
     // 奇策の選択（0：回復、1：行動封印）
     int trickChoice;
 
     // 封印する敵の行動（0：攻撃、1：防御、2：奇策）
-    int disableAction;
+    EnemyAbility disableAction;
 
     // 封印の残りターン
     int disableTurns;
 
+    // この試合で能力封印を使用した回数
+    int sealUseCount;
+
     bool isBattleEnd;
 
 public:
-    void Init();
+    void Init(int battleNumber = 0);
 
     void Update();
 
@@ -49,7 +58,13 @@ public:
     void SetTrickChoice(int choice);
 
     // 封印する敵の行動を設定
-    void SetDisableAction(int action);
+    void SetDisableAction(EnemyAbility action);
+
+    // 敵がCI速度妨害を使用しているか
+    bool IsCISpeedInterferenceActive();
+
+    // この試合で封印を使用した回数を取得
+    int GetSealUseCount();
 
     bool IsBattleEnd();
 };

@@ -1,0 +1,5 @@
+﻿  Game.cpp
+C:\GitHub\-Self-made-game\ChargeInpact\packages\DxLib.vc140.3.2.4.3\build\native\include\DxFunctionWin.h(278,1): warning C4010: 単一行コメント (//) に、行連結文字があります。
+  (ソース ファイル 'Game.cpp' をコンパイルしています)
+  
+  ChargeInpact.vcxproj -> C:\GitHub\-Self-made-game\ChargeInpact\x64\Debug\ChargeInpact.exe

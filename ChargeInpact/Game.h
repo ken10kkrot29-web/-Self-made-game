@@ -25,6 +25,12 @@ private:
     // 選択中の戦略
     int select = 0;
 
+    // CI補助の選択
+    int assistSelect = 1;
+
+    // CI補助を使用するか
+    bool useCIAssist = false;
+
     // 決定した戦略
     int selectedStrategy = 0;
 
@@ -51,4 +57,22 @@ private:
 
     // あいこになった時刻
     int tieWaitStartTime;
+
+    // 奇策の選択
+    int trickSelect = 0;
+
+    // 封印する能力の選択
+    int sealSelect = 0;
+
+    // 封印できる能力の一覧
+    EnemyAbility sealCandidates[6];
+
+    // 封印できる能力の数
+    int sealCandidateCount = 0;
+
+    // 封印できる能力を調べる
+    void CreateSealCandidates();
+
+    // チャージインパクトを開始する
+    void StartChargeImpact();
 };

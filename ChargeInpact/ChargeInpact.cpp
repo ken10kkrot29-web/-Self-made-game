@@ -19,6 +19,7 @@ void ChargeInpact::Init()
     direction = 1;
     speed = 3.0f;
     baseSpeed = speed;
+    playerSpeedRate = 1.0f;
     tieCount = 0;
     isStopped = false;
     oldSpace = false;
@@ -158,6 +159,18 @@ void ChargeInpact::SetSpeed(float newSpeed)
 
     // 試合開始時の基本速度を保存
     baseSpeed = newSpeed;
+
+    // 速度倍率を初期化
+    playerSpeedRate = 1.0f;
+}
+
+// プレイヤー側の速度倍率を設定
+void ChargeInpact::SetPlayerSpeedRate(float rate)
+{
+    playerSpeedRate = rate;
+
+    // プレイヤー側だけ速度を変更
+    speed = baseSpeed * playerSpeedRate;
 }
 
 // CPU用のゲージ更新
@@ -260,9 +273,14 @@ void ChargeInpact::RetryAfterTie()
     // あいこの回数を増やす
     tieCount++;
 
-    // 速度を1.0ずつ上げる
-    speed = baseSpeed + tieCount * 1.5f;
-    cpuSpeed = speed;
+    // あいこの回数に応じて速度を上げる
+    float currentSpeed = baseSpeed + tieCount * 2.0f;
+
+    // プレイヤー側は補助設定を反映
+    speed = currentSpeed * playerSpeedRate;
+
+    // CPU側は通常速度
+    cpuSpeed = currentSpeed;
 
     // プレイヤーゲージを初期位置に戻す
     barX = (float)BAR_LEFT;

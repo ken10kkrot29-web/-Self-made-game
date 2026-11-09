@@ -1,0 +1,12 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\github\\-self-made-game\\chargeinpact\\character.cpp",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\github\\-self-made-game\\chargeinpact\\character.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

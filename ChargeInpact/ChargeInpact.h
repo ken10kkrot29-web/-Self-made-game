@@ -51,6 +51,9 @@ private:
 	// 試合開始時の基本速度
 	float baseSpeed;
 
+	// プレイヤー側の速度倍率
+	float playerSpeedRate;
+
 	// 前回のスペースキーの状態
 	bool oldSpace;
 
@@ -76,6 +79,9 @@ public:
 
 	//CIスピードの設定
 	void SetSpeed(float newSpeed);
+
+	// プレイヤー側の速度倍率を設定
+	void SetPlayerSpeedRate(float rate);
 
 	// あいこ後にゲージを再挑戦できる状態にする
 	void RetryAfterTie();

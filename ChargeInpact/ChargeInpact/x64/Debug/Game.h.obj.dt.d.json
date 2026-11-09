@@ -1,0 +1,18 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\github\\-self-made-game\\chargeinpact\\game.h",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\github\\-self-made-game\\chargeinpact\\battlesystem.h",
+            "c:\\github\\-self-made-game\\chargeinpact\\player.h",
+            "c:\\github\\-self-made-game\\chargeinpact\\character.h",
+            "c:\\github\\-self-made-game\\chargeinpact\\enemy.h",
+            "c:\\github\\-self-made-game\\chargeinpact\\strategy.h",
+            "c:\\github\\-self-made-game\\chargeinpact\\chargeinpact.h",
+            "c:\\github\\-self-made-game\\chargeinpact\\tournament.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

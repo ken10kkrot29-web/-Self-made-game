@@ -2,6 +2,34 @@
 #include "DxLib.h"
 #include "Game.h"
 
+// 敵の能力名を取得
+const wchar_t* GetAbilityName(EnemyAbility ability)
+{
+    switch (ability)
+    {
+    case EnemyAbility::Attack:
+        return L"攻撃";
+
+    case EnemyAbility::Defense:
+        return L"防御";
+
+    case EnemyAbility::Recovery:
+        return L"回復";
+
+    case EnemyAbility::AttackBoost:
+        return L"攻撃強化";
+
+    case EnemyAbility::DefenseBoost:
+        return L"防御強化";
+
+    case EnemyAbility::CISpeedInterference:
+        return L"CI速度妨害";
+
+    default:
+        return L"なし";
+    }
+}
+
 // ゲームの初期化
 void Game::Init()
 {
@@ -14,9 +42,9 @@ void Game::Init()
     oldDown = false;
     oldEscape = false;
 
-    battle.Init();
-    chargeInpact.Init();
     tournament.Init();
+    battle.Init(0);
+    chargeInpact.Init();
 
     resultSent = false;
     isTie = false;
@@ -53,12 +81,146 @@ bool Game::Update()
     {
         if (enter == 1 && oldEnter == 0)
         {
+            assistSelect = 1;
+            scene = 5;
+        }
+    }
+
+    // CI補助選択画面
+    else if (scene == 5)
+    {
+        // 上キー
+        if (up == 1 && oldUp == 0)
+        {
+            assistSelect--;
+
+            if (assistSelect < 0)
+            {
+                assistSelect = 1;
+            }
+        }
+
+        // 下キー
+        if (down == 1 && oldDown == 0)
+        {
+            assistSelect++;
+
+            if (assistSelect > 1)
+            {
+                assistSelect = 0;
+            }
+        }
+
+        // ENTERキーで決定
+        if (enter == 1 && oldEnter == 0)
+        {
+            useCIAssist = (assistSelect == 0);
+
+            select = 0;
             scene = 1;
+        }
+    }
+
+    // 奇策選択画面
+    else if (scene == 6)
+    {
+        // 上キー
+        if (up == 1 && oldUp == 0)
+        {
+            trickSelect--;
+
+            if (trickSelect < 0)
+            {
+                trickSelect = 1;
+            }
+        }
+
+        // 下キー
+        if (down == 1 && oldDown == 0)
+        {
+            trickSelect++;
+
+            if (trickSelect > 1)
+            {
+                trickSelect = 0;
+            }
+        }
+
+        // ENTERキー
+        if (enter == 1 && oldEnter == 0)
+        {
+            // 選択した奇策を保存
+            battle.SetTrickChoice(trickSelect);
+
+            // 回復を選択した場合
+            if (trickSelect == 0)
+            {
+                StartChargeImpact();
+            }
+            // 能力封印を選択した場合
+            else
+            {
+                // 封印できる能力を調べる
+                CreateSealCandidates();
+
+                // 封印できる能力がある場合
+                if (sealCandidateCount > 0 &&
+                    battle.GetSealUseCount() < 2)
+                {
+                    sealSelect = 0;
+                    scene = 7;
+                }
+                else
+                {
+                    // 封印できない場合は回復に変更
+                    trickSelect = 0;
+                    battle.SetTrickChoice(0);
+
+                    StartChargeImpact();
+                }
+            }
+        }
+    }
+
+    // 封印する能力の選択画面
+    else if (scene == 7)
+    {
+        // 上キー
+        if (up == 1 && oldUp == 0)
+        {
+            sealSelect--;
+
+            if (sealSelect < 0)
+            {
+                sealSelect = sealCandidateCount - 1;
+            }
+        }
+
+        // 下キー
+        if (down == 1 && oldDown == 0)
+        {
+            sealSelect++;
+
+            if (sealSelect >= sealCandidateCount)
+            {
+                sealSelect = 0;
+            }
+        }
+
+        // ENTERキー
+        if (enter == 1 && oldEnter == 0)
+        {
+            // 封印する能力を保存
+            battle.SetDisableAction(sealCandidates[sealSelect]);
+
+            // CI開始
+            StartChargeImpact();
         }
     }
 
     // 戦略選択画面
     else if (scene == 1)
+
     {
         // 上キー
         if (up == 1 && oldUp == 0)
@@ -90,163 +252,139 @@ bool Game::Update()
             // 選択した戦略を保存
             battle.SetPlayerStrategy((StrategyType)selectedStrategy);
 
-            // 敵の行動を決定
-            battle.StartTurn();
-
-            // CIゲージを初期化
-            chargeInpact.Init();
-
-            // 試合数に応じてCI速度を変更
-            int battleNumber = tournament.GetBattleCount();
-
-            if (battleNumber == 0)
+            // 奇策を選んだ場合
+            if (selectedStrategy == 2)
             {
-                chargeInpact.SetSpeed(4.5f);
+                trickSelect = 0;
+                scene = 6;
             }
-            else if (battleNumber == 1)
+            else
             {
-                chargeInpact.SetSpeed(9.0f);
+                // それ以外はそのままCI開始
+                StartChargeImpact();
             }
-            else if (battleNumber == 2)
-            {
-                chargeInpact.SetSpeed(13.0f);
-            }
-
-            // 試合数に応じてCPUの難易度を変更
-            if (battleNumber == 0)
-            {
-                chargeInpact.SetCPUTargetRange(40, 60);
-            }
-            else if (battleNumber == 1)
-            {
-                chargeInpact.SetCPUTargetRange(60, 80);
-            }
-            else if (battleNumber == 2)
-            {
-                chargeInpact.SetCPUTargetRange(75, 100);
-            }
-            resultSent = false;
-
-            scene = 2;
         }
     }
 
-    // CI画面
-    else if (scene == 2)
-    {
-        // あいこ後の待機中
-        if (isTieWaiting)
+        // CI画面
+        else if (scene == 2)
         {
-            // 2秒経過したら再挑戦
-            if (GetNowCount() - tieWaitStartTime >= 2000)
+            // あいこ後の待機中
+            if (isTieWaiting)
             {
-                isTieWaiting = false;
-                isTie = false;
-
-                // ゲージを再挑戦できる状態にする
-                chargeInpact.RetryAfterTie();
-            }
-        }
-        else
-        {
-            // プレイヤーのゲージ更新
-            chargeInpact.Update();
-
-            // CPUのゲージ更新
-            chargeInpact.UpdateCPU();
-
-            // 両方のゲージが停止したら結果判定
-            if (chargeInpact.IsStopped() &&
-                chargeInpact.IsCPUStopped() &&
-                !resultSent)
-            {
-                // スコアが同じならあいこ
-                if (chargeInpact.GetScore() == chargeInpact.GetCPUScore())
+                // 2秒経過したら再挑戦
+                if (GetNowCount() - tieWaitStartTime >= 2000)
                 {
-                    isTie = true;
-                    isTieWaiting = true;
-
-                    // 待機開始時刻を保存
-                    tieWaitStartTime = GetNowCount();
-                }
-                else
-                {
-                    // 勝敗が決まった場合
-                    bool playerWin =
-                        chargeInpact.GetScore() > chargeInpact.GetCPUScore();
-
-                    battle.SetChargeImpactResult(playerWin);
-                    battle.ResolveBattle();
-
+                    isTieWaiting = false;
                     isTie = false;
-                    resultSent = true;
-                    scene = 3;
-                }
-            }
-        }
-    }
 
-    // 戦闘結果画面
-    else if (scene == 3)
-    {
-        if (enter == 1 && oldEnter == 0)
-        {
-            // 戦闘が終了している場合
-            if (battle.IsBattleEnd())
-            {
-                // 敵を倒していたらプレイヤーの勝利
-                bool playerWin = battle.GetEnemy().IsDefeated();
-
-                // トーナメントに結果を送る
-                tournament.SetBattleResult(playerWin);
-
-                // トーナメントが終了した場合
-                if (tournament.IsFinished())
-                {
-                    scene = 4;
-                }
-                else
-                {
-                    // 次の試合を開始
-                    battle.Init();
-                    chargeInpact.Init();
-
-                    scene = 1;
+                    // ゲージを再挑戦できる状態にする
+                    chargeInpact.RetryAfterTie();
                 }
             }
             else
             {
-                // まだ戦闘が続いている場合
-                scene = 1;
-                chargeInpact.Init();
+                // プレイヤーのゲージ更新
+                chargeInpact.Update();
+
+                // CPUのゲージ更新
+                chargeInpact.UpdateCPU();
+
+                // 両方のゲージが停止したら結果判定
+                if (chargeInpact.IsStopped() &&
+                    chargeInpact.IsCPUStopped() &&
+                    !resultSent)
+                {
+                    // スコアが同じならあいこ
+                    if (chargeInpact.GetScore() == chargeInpact.GetCPUScore())
+                    {
+                        isTie = true;
+                        isTieWaiting = true;
+
+                        // 待機開始時刻を保存
+                        tieWaitStartTime = GetNowCount();
+                    }
+                    else
+                    {
+                        // 勝敗が決まった場合
+                        bool playerWin =
+                            chargeInpact.GetScore() > chargeInpact.GetCPUScore();
+
+                        battle.SetChargeImpactResult(playerWin);
+                        battle.ResolveBattle();
+
+                        isTie = false;
+                        resultSent = true;
+                        scene = 3;
+                    }
+                }
             }
-
-            select = 0;
-            resultSent = false;
         }
-    }
 
-    // トーナメント結果画面
-    else if (scene == 4)
-    {
-        if (enter == 1 && oldEnter == 0)
+        // 戦闘結果画面
+        else if (scene == 3)
         {
-            tournament.Init();
-            battle.Init();
-            chargeInpact.Init();
+            if (enter == 1 && oldEnter == 0)
+            {
+                // 戦闘が終了している場合
+                if (battle.IsBattleEnd())
+                {
+                    // 敵を倒していたらプレイヤーの勝利
+                    bool playerWin = battle.GetEnemy().IsDefeated();
 
-            scene = 0;
-            select = 0;
+                    // トーナメントに結果を送る
+                    tournament.SetBattleResult(playerWin);
+
+                    // トーナメントが終了した場合
+                    if (tournament.IsFinished())
+                    {
+                        scene = 4;
+                    }
+                    else
+                    {
+                        // 次の試合を開始
+                        battle.Init(tournament.GetBattleCount());
+                        chargeInpact.Init();
+
+                        assistSelect = 1;
+                        select = 0;
+
+                        scene = 5;
+                    }
+                }
+                else
+                {
+                    // まだ戦闘が続いている場合
+                    scene = 1;
+                    chargeInpact.Init();
+                }
+
+                select = 0;
+                resultSent = false;
+            }
         }
-    }
 
-    // 前回のキー状態を保存
-    oldEnter = enter;
-    oldUp = up;
-    oldDown = down;
-    oldEscape = escape;
+        // トーナメント結果画面
+        else if (scene == 4)
+        {
+            if (enter == 1 && oldEnter == 0)
+            {
+                tournament.Init();
+                battle.Init();
+                chargeInpact.Init();
 
-    return true;
+                scene = 0;
+                select = 0;
+            }
+        }
+
+        // 前回のキー状態を保存
+        oldEnter = enter;
+        oldUp = up;
+        oldDown = down;
+        oldEscape = escape;
+
+        return true;
 }
 
 // ゲームの描画
@@ -267,6 +405,83 @@ void Game::Draw()
         DrawString(660, 405,
             L" ENTER to start",
             GetColor(255, 255, 0));
+    }
+
+    // CI補助選択画面
+    else if (scene == 5)
+    {
+        DrawString(650, 220,
+            L"CI補助を選択してください",
+            GetColor(255, 255, 255));
+
+        DrawString(750, 380,
+            assistSelect == 0 ? L"> ON" : L"  ON",
+            GetColor(100, 255, 100));
+
+        DrawString(750, 480,
+            assistSelect == 1 ? L"> OFF" : L"  OFF",
+            GetColor(255, 255, 255));
+
+        DrawString(600, 650,
+            L"ON : プレイヤーのCI速度が20%低下",
+            GetColor(200, 200, 200));
+
+        DrawString(650, 850,
+            L"上 / 下 : 選択    ENTER : 決定",
+            GetColor(200, 200, 200));
+    }
+
+    // 奇策選択画面
+    else if (scene == 6)
+    {
+        DrawString(650, 220,
+            L"奇策を選択してください",
+            GetColor(255, 255, 255));
+
+        DrawString(750, 380,
+            trickSelect == 0 ? L"> HP回復" : L"  HP回復",
+            GetColor(100, 255, 100));
+
+        DrawString(750, 480,
+            trickSelect == 1 ? L"> 能力封印" : L"  能力封印",
+            GetColor(255, 220, 100));
+
+        DrawFormatString(650, 600,
+            GetColor(255, 255, 255),
+            L"封印使用回数 : %d / 2",
+            battle.GetSealUseCount());
+
+        DrawString(650, 850,
+            L"上 / 下 : 選択    ENTER : 決定",
+            GetColor(200, 200, 200));
+    }
+
+    // 封印する能力の選択画面
+    else if (scene == 7)
+    {
+        DrawString(650, 180,
+            L"封印する敵の能力を選択",
+            GetColor(255, 255, 255));
+
+        // 封印できる能力を表示
+        for (int i = 0; i < sealCandidateCount; i++)
+        {
+            DrawString(700, 300 + i * 80,
+                GetAbilityName(sealCandidates[i]),
+                GetColor(255, 255, 255));
+
+            // 選択中の能力にマークを付ける
+            if (i == sealSelect)
+            {
+                DrawString(650, 300 + i * 80,
+                    L">",
+                    GetColor(255, 255, 0));
+            }
+        }
+
+        DrawString(650, 850,
+            L"上 / 下 : 選択    ENTER : 決定",
+            GetColor(200, 200, 200));
     }
 
     // 戦略選択画面
@@ -483,4 +698,88 @@ void Game::Draw()
             L"ENTER : タイトルに戻る",
             GetColor(200, 200, 200));
     }
+}
+
+// 封印できる能力を調べる
+void Game::CreateSealCandidates()
+{
+    sealCandidateCount = 0;
+
+    // 敵の6種類の能力を確認
+    for (int i = 0; i < 6; i++)
+    {
+        EnemyAbility ability = static_cast<EnemyAbility>(i);
+
+        // 敵が持っていて、封印されていない能力だけ登録
+        if (battle.GetEnemy().HasAbility(ability) &&
+            !battle.GetEnemy().IsAbilitySealed(ability))
+        {
+            sealCandidates[sealCandidateCount] = ability;
+            sealCandidateCount++;
+        }
+    }
+}
+
+// チャージインパクトを開始する
+void Game::StartChargeImpact()
+{
+    // 敵の行動を決定
+    battle.StartTurn();
+
+    // CIゲージを初期化
+    chargeInpact.Init();
+
+    // 試合数を取得
+    int battleNumber = tournament.GetBattleCount();
+
+    // 試合数に応じてCI速度を変更
+    if (battleNumber == 0)
+    {
+        chargeInpact.SetSpeed(4.5f);
+    }
+    else if (battleNumber == 1)
+    {
+        chargeInpact.SetSpeed(10.0f);
+    }
+    else if (battleNumber == 2)
+    {
+        chargeInpact.SetSpeed(15.0f);
+    }
+
+    // プレイヤーのCI速度倍率
+    float playerSpeedRate = 1.0f;
+
+    // CI補助
+    if (useCIAssist)
+    {
+        playerSpeedRate *= 0.8f;
+    }
+
+    // 敵のCI速度妨害
+    if (battle.IsCISpeedInterferenceActive())
+    {
+        playerSpeedRate *= 1.2f;
+    }
+
+    // プレイヤーのCI速度に反映
+    chargeInpact.SetPlayerSpeedRate(playerSpeedRate);
+
+    // CPUの難易度
+    if (battleNumber == 0)
+    {
+        chargeInpact.SetCPUTargetRange(40, 60);
+    }
+    else if (battleNumber == 1)
+    {
+        chargeInpact.SetCPUTargetRange(60, 80);
+    }
+    else if (battleNumber == 2)
+    {
+        chargeInpact.SetCPUTargetRange(75, 100);
+    }
+
+    resultSent = false;
+
+    // CI画面へ
+    scene = 2;
 }
