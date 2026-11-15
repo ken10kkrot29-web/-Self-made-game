@@ -1,0 +1,12 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\-self-made-game\\chargeinpact\\strategy.cpp",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\-self-made-game\\chargeinpact\\strategy.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

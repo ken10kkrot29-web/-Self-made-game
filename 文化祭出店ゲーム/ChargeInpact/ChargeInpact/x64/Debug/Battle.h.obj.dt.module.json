@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "ChargeInpact\\x64\\Debug\\Battle.obj",
+            "outputs": [
+                "ChargeInpact\\x64\\Debug\\Battle.h.obj.dt.module.json",
+                "ChargeInpact\\x64\\Debug\\Battle.h.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

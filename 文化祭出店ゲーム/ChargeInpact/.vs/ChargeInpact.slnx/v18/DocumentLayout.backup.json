@@ -1,0 +1,277 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\-Self-made-game\\ChargeInpact\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Strategy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Strategy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Strategy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Strategy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Enemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Enemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Enemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Enemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\ChargeInpact.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:ChargeInpact.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\ChargeInpact.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:ChargeInpact.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Character.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Character.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\Character.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:Character.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\BattleSystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:BattleSystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|C:\\-Self-made-game\\ChargeInpact\\BattleSystem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{15E97D55-7B15-49FB-93DA-09AF311BF659}|ChargeInpact.vcxproj|solutionrelative:BattleSystem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "BattleSystem.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\BattleSystem.cpp",
+              "RelativeDocumentMoniker": "BattleSystem.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\BattleSystem.cpp",
+              "RelativeToolTip": "BattleSystem.cpp",
+              "ViewState": "AgIAAIwBAAAAAAAAAAAUwLEBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-09T01:47:59.225Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "BattleSystem.h",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\BattleSystem.h",
+              "RelativeDocumentMoniker": "BattleSystem.h",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\BattleSystem.h",
+              "RelativeToolTip": "BattleSystem.h",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAB8AAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-13T11:26:02.597Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Strategy.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Strategy.cpp",
+              "RelativeDocumentMoniker": "Strategy.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Strategy.cpp",
+              "RelativeToolTip": "Strategy.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-13T11:29:42.677Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Strategy.h",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Strategy.h",
+              "RelativeDocumentMoniker": "Strategy.h",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Strategy.h",
+              "RelativeToolTip": "Strategy.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-13T11:29:25.067Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Main.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Main.cpp",
+              "RelativeDocumentMoniker": "Main.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Main.cpp",
+              "RelativeToolTip": "Main.cpp",
+              "ViewState": "AgIAABMAAAAAAAAAAAAUwCsAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-15T08:17:20.482Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Game.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Game.cpp",
+              "RelativeDocumentMoniker": "Game.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Game.cpp",
+              "RelativeToolTip": "Game.cpp",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAUwDoAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-13T09:30:20.518Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Game.h",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Game.h",
+              "RelativeDocumentMoniker": "Game.h",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Game.h",
+              "RelativeToolTip": "Game.h",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAD4AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-13T11:25:52.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Enemy.h",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Enemy.h",
+              "RelativeDocumentMoniker": "Enemy.h",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Enemy.h",
+              "RelativeToolTip": "Enemy.h",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwBIAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-13T11:26:11.215Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Player.cpp",
+              "RelativeDocumentMoniker": "Player.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Player.cpp",
+              "RelativeToolTip": "Player.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-13T11:28:46.157Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Player.h",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Player.h",
+              "RelativeDocumentMoniker": "Player.h",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Player.h",
+              "RelativeToolTip": "Player.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-13T11:28:37.565Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Enemy.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Enemy.cpp",
+              "RelativeDocumentMoniker": "Enemy.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Enemy.cpp",
+              "RelativeToolTip": "Enemy.cpp",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAEwFwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-13T11:26:18.205Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ChargeInpact.h",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\ChargeInpact.h",
+              "RelativeDocumentMoniker": "ChargeInpact.h",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\ChargeInpact.h",
+              "RelativeToolTip": "ChargeInpact.h",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-13T11:29:57.116Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ChargeInpact.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\ChargeInpact.cpp",
+              "RelativeDocumentMoniker": "ChargeInpact.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\ChargeInpact.cpp",
+              "RelativeToolTip": "ChargeInpact.cpp",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAOABAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-13T11:30:04.231Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Character.h",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Character.h",
+              "RelativeDocumentMoniker": "Character.h",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Character.h",
+              "RelativeToolTip": "Character.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-11-13T11:29:03.154Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Character.cpp",
+              "DocumentMoniker": "C:\\-Self-made-game\\ChargeInpact\\Character.cpp",
+              "RelativeDocumentMoniker": "Character.cpp",
+              "ToolTip": "C:\\-Self-made-game\\ChargeInpact\\Character.cpp",
+              "RelativeToolTip": "Character.cpp",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAACgAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-13T11:29:09.274Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ChargeInpact.vcxproj" Id="15e97d55-7b15-49fb-93da-09af311bf659" />
+</Solution>

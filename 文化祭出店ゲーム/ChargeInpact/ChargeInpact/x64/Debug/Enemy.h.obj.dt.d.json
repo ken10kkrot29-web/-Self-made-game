@@ -1,0 +1,13 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\-self-made-game\\chargeinpact\\enemy.h",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\-self-made-game\\chargeinpact\\character.h",
+            "c:\\-self-made-game\\chargeinpact\\strategy.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

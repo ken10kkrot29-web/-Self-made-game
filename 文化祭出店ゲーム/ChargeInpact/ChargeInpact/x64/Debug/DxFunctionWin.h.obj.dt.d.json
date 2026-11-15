@@ -1,0 +1,10 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\-self-made-game\\chargeinpact\\packages\\dxlib.vc140.3.2.4.3\\build\\native\\include\\dxfunctionwin.h",
+        "ProvidedModule": "",
+        "Includes": [],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
