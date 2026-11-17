@@ -1,6 +1,9 @@
 ﻿// 画面表示、キー入力、画面切り替え
 #include "DxLib.h"
 #include "Game.h"
+#include "Enemy.h"
+#include "Strategy.h"
+#include <Windows.h>
 
 // 敵の能力名を取得
 const wchar_t* GetAbilityName(EnemyAbility ability)
@@ -55,17 +58,12 @@ bool Game::CanUseSeal()
 void Game::Init()
 {
     scene = 0;
-    // タイトル背景画像を読み込む
+    //// タイトル背景画像を読み込む
     titleBgHandle = LoadGraph(L"images/title_bg.png");
-    // 画像の読み込み確認
-    if (titleBgHandle == -1)
-    {
-        printfDx(L"背景画像の読み込みに失敗しました\n");
-    }
-    else
-    {
-        printfDx(L"背景画像の読み込みに成功しました\n");
-    }
+
+    // 戦闘画面用背景画像を読み込む
+    battleBgHandle = LoadGraph(L"images/battle_bg.png");
+
     select = 0;
     selectedStrategy = 0;
 
@@ -101,9 +99,9 @@ void Game::Init()
 bool Game::Update()
 {
     // キー入力を取得
-    int enter = CheckHitKey(KEY_INPUT_RETURN);
-    int up = CheckHitKey(KEY_INPUT_UP);
-    int down = CheckHitKey(KEY_INPUT_DOWN);
+    int enter = CheckHitKey(KEY_INPUT_Z);
+    int up = CheckHitKey(KEY_INPUT_W);
+    int down = CheckHitKey(KEY_INPUT_S);
     int escape = CheckHitKey(KEY_INPUT_ESCAPE);
     int tab = CheckHitKey(KEY_INPUT_TAB);
     int r = CheckHitKey(KEY_INPUT_R);
@@ -114,7 +112,7 @@ bool Game::Update()
         showEnemyInfo = !showEnemyInfo;
     }
 
-    // ESCキー
+    // SPACEキー
     if (escape == 1 && oldEscape == false)
     {
         if (scene == 0)
@@ -473,32 +471,60 @@ void Game::Draw()
 
     SetFontSize(36);
 
+
+    int backgroundHandle = -1;
+
+    // タイトル以外の画面に背景を表示
+    if (scene == 1 ||
+        scene == 2 ||
+        scene == 3 ||
+        scene == 5 ||
+        scene == 6 ||
+        scene == 7)
+    {
+        if (battleBgHandle != -1)
+        {
+            // 背景画像を画面いっぱいに描画
+            DrawExtendGraph(
+                0, 0,
+                1920, 1080,
+                LoadGraph(L"images/battle_bg.png"),
+                FALSE
+            );
+        }
+    }
+
     // タイトル画面
     if (scene == 0)
     {
         // 背景画像を画面いっぱいに描画
         if (titleBgHandle != -1)
         {
-            DrawExtendGraph(
-                0, 0,
-                1920, 1080,
-                titleBgHandle,
-                FALSE
-            );
+
+            //背景画像を読み込ませるなら
+                backgroundHandle = LoadGraph(L"images/title_bg.png");
+                // 背景画像を画面いっぱいに表示
+                DrawExtendGraph(
+                    0, 0,
+                    1920, 1080,
+                    backgroundHandle,
+                    TRUE
+                );
+        
         }
 
         // ゲームタイトル
         SetFontSize(65);
 
-        DrawString(660, 225,
+        DrawString(700, 400, 
             L"STRATEGY バトル",
             GetColor(255, 255, 255));
 
         // スタート案内
         SetFontSize(45);
 
-        DrawString(660, 405,
-            L"ENTER to start",
+        DrawString(640, 600,
+            L"Zキーを押してゲームスタート",
             GetColor(255, 230, 50));
 
         SetFontSize(36);
@@ -523,8 +549,8 @@ void Game::Draw()
             L"ON : プレイヤーのCI速度が20%低下",
             GetColor(200, 200, 200));
 
-        DrawString(650, 850,
-            L"上 / 下 : 選択    ENTER : 決定",
+        DrawString(700, 850,
+            L"Wキー/Sキー:選択　Zキー:決定",
             GetColor(200, 200, 200));
     }
 
@@ -564,13 +590,13 @@ void Game::Draw()
                 GetColor(255, 80, 80));
         }
 
-        DrawFormatString(650, 600,
+        DrawFormatString(770, 600,
             GetColor(255, 255, 255),
             L"封印使用回数 : %d / 5",
             battle.GetSealUseCount());
 
-        DrawString(650, 850,
-            L"上 / 下 : 選択    ENTER : 決定    R : 戻る",
+        DrawString(600, 850,
+            L"Wキー/Sキー:選択　Zキー:決定  Rキー:戻る",
             GetColor(200, 200, 200));
     }
 
@@ -595,8 +621,8 @@ void Game::Draw()
             }
         }
 
-        DrawString(650, 850,
-            L"上 / 下 : 選択    ENTER : 決定    R : 戻る",
+        DrawString(600, 850,
+            L"Wキー/Sキー:選択　Zキー:決定  Rキー:戻る",
             GetColor(200, 200, 200));
     }
 
@@ -654,7 +680,7 @@ void Game::Draw()
         SetFontSize(36);
 
         DrawString(1050, 430,
-            L"上 / 下 : 選択",
+            L"W / S : 選択",
             GetColor(200, 200, 200));
 
         DrawString(1050, 500,
@@ -724,17 +750,31 @@ void Game::Draw()
                 L"【直近の戦闘履歴】",
                 GetColor(100, 200, 255));
 
+            // 実際に表示した履歴の数
+            int drawCount = 0;
+
             for (int i = 0; i < 3; i++)
             {
                 const wchar_t* log =
                     battle.GetBattleLog(i);
 
+                // 履歴が存在する場合
                 if (log[0] != L'\0')
                 {
-                    DrawString(1050, 1005 + i * 25,
+                    DrawString(1050, 1005 + drawCount * 25,
                         log,
                         GetColor(220, 220, 220));
+
+                    drawCount++;
                 }
+            }
+
+            // 履歴が1件もない場合
+            if (drawCount == 0)
+            {
+                DrawString(1050, 1005,
+                    L"まだ戦闘履歴はありません",
+                    GetColor(180, 180, 180));
             }
 
             SetFontSize(36);
@@ -764,11 +804,11 @@ else if (scene == 2)
     {
         SetFontSize(44);
 
-        DrawString(700, 650,
+        DrawString(800, 700,
             L"あいこだ！！",
             GetColor(255, 255, 0));
 
-        DrawString(570, 720,
+        DrawString(500, 850,
             L"もう一度ゲージを止めて決着をつけよう！！",
             GetColor(255, 255, 255));
 
@@ -776,8 +816,9 @@ else if (scene == 2)
     }
 
     // 操作説明
-    DrawString(650, 610,
-        L"SPACE : ゲージを止める",
+    DrawExtendString(600, 610,
+        1.2f, 1.2f,
+        L"SPACEキーを押してゲージを止めろ！！",
         GetColor(255, 255, 0));
 
     // HP表示
@@ -910,7 +951,7 @@ else if (scene == 2)
             SetFontSize(36);
 
             DrawString(800, 800,
-                L"ENTER : タイトルに戻る",
+                L"Zキー : タイトルに戻る",
                 GetColor(200, 200, 200));
         }
         else if (battle.GetPlayer().IsDefeated())
@@ -924,7 +965,7 @@ else if (scene == 2)
             SetFontSize(36);
 
             DrawString(800, 800,
-                L"ENTER : タイトルに戻る",
+                L"Zキー : タイトルに戻る",
                 GetColor(200, 200, 200));
         }
         else
@@ -934,7 +975,7 @@ else if (scene == 2)
                 GetColor(255, 255, 255));
 
             DrawString(800, 800,
-                L"ENTER : 続ける",
+                L"Zキー : 続ける",
                 GetColor(200, 200, 200));
         }
     }
@@ -972,7 +1013,7 @@ void Game::StartChargeImpact()
     chargeInpact.Init();
 
     // CIの基本速度
-    chargeInpact.SetSpeed(10.0f);
+    chargeInpact.SetSpeed(40.0f);
 
     // プレイヤーのCI速度倍率
     float playerSpeedRate = 1.0f;
@@ -986,14 +1027,15 @@ void Game::StartChargeImpact()
     // 敵のCI速度妨害
     if (battle.IsCISpeedInterferenceActive())
     {
-        playerSpeedRate *= 1.5f;
+        // プレイヤーのCI速度を10%低下
+        playerSpeedRate *= 1.2f;
     }
 
     // プレイヤーのCI速度に反映
     chargeInpact.SetPlayerSpeedRate(playerSpeedRate);
 
     // CPUの難易度
-    chargeInpact.SetCPUTargetRange(40, 100);
+    chargeInpact.SetCPUTargetRange(75, 100);
 
     resultSent = false;
 

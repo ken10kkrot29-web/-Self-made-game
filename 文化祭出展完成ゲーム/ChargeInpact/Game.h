@@ -62,6 +62,9 @@ private:
     // タイトル画面の背景画像
     int titleBgHandle = -1;
 
+    // 戦闘画面用背景画像
+    int battleBgHandle = -1;
+
     // あいこが発生したか
     bool isTie = false;
 

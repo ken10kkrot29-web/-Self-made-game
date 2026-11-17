@@ -1,4 +1,4 @@
-//バーの移動・停止・制限時間などを実装
+﻿//バーの移動・停止・制限時間などを実装
 #include "DxLib.h"
 #include "ChargeInpact.h"
 
@@ -199,7 +199,7 @@ void ChargeInpact::Init()
     cpuScore = 0;
 
     // CPUの停止目標を設定
-    cpuTargetScore = GetRand(100);
+    cpuTargetScore = GetRand(25) + 75;
 }
 
 void ChargeInpact::Update()

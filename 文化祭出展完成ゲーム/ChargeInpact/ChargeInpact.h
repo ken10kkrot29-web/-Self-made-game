@@ -1,4 +1,4 @@
-//バーの位置や速度などの変数と関数を宣言amfe
+﻿//バーの位置や速度などの変数と関数を宣言amfe
 #pragma once
 
 class ChargeInpact

@@ -160,6 +160,10 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\battle_bg.png" />
+    <Image Include="images\title_bg.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\DxLib.vc140.3.2.4.3\build\native\DxLib.vc140.targets" Condition="Exists('packages\DxLib.vc140.3.2.4.3\build\native\DxLib.vc140.targets')" />

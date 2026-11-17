@@ -1,4 +1,4 @@
-#include "Character.h"
+﻿#include "Character.h"
 
 // ステータスを初期化
 void Character::Init(int maxHP, int attack, int defense)
